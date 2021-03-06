@@ -133,3 +133,4 @@ dmypy.json
 .idea/
 
 # User-specific stuff
+.DS_Store
