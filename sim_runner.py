@@ -1,4 +1,6 @@
-
+""""
+Keeping this code around to turn into a harness to run all player strategies through the same simulations.
+"""
 
 if __name__ == '__main__':
     sims = [
