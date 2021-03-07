@@ -4,7 +4,7 @@ from FirstOrchard.Player import Player
 
 class Game:
 
-    def __init__(self):
+    def __init__(self, player):
         self.green_apples = 4
         self.red_apples = 4
         self.blue_plums = 4
@@ -13,10 +13,18 @@ class Game:
         self._log = ''
         self._normalized_log_buffer = []
         self._normalized_log = ''
-        self.player = Player(self)
+        self.player = player
+        self.player.game = self
 
     def new_game(self):
-        self.__init__()
+        self.green_apples = 4
+        self.red_apples = 4
+        self.blue_plums = 4
+        self.yellow_pears = 4
+        self.crow_position = 6
+        self._log = ''
+        self._normalized_log_buffer = []
+        self._normalized_log = ''
 
     def is_game_won(self):
         if self.green_apples == 0 and self.red_apples == 0 and \

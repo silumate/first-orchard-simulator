@@ -2,7 +2,7 @@ import random
 
 
 class Player:
-    def __init__(self, game):
+    def __init__(self, game=None):
         self.game = game
 
     def move(self):
