@@ -1,4 +1,5 @@
 import random
+from FirstOrchard.Player import Player
 
 
 class Game:
@@ -12,7 +13,7 @@ class Game:
         self._log = ''
         self._normalized_log_buffer = []
         self._normalized_log = ''
-
+        self.player = Player(self)
 
     def new_game(self):
         self.__init__()
@@ -55,21 +56,6 @@ class Game:
         self.crow_position -= 1
         # self.log('!')
 
-    def move_strategically(self):
-        choices = []
-        if self.green_apples > 0:
-            choices.append(self.move_green)
-        if self.red_apples > 0:
-            choices.append(self.move_red)
-        if self.blue_plums > 0:
-            choices.append(self.move_blue)
-        if self.yellow_pears > 0:
-            choices.append(self.move_yellow)
-
-        random_index = random.randint(0, len(choices) - 1)
-        f = choices[random_index]
-        f(True)
-
     def log(self, s, is_strategic=False):
         if not is_strategic:
             self._log += s
@@ -106,7 +92,7 @@ class Game:
             elif roll == 4:
                 self.move_yellow()
             else:
-                self.move_strategically()
+                self.player.move()
 
             turn_count += 1
 
