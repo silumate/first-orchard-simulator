@@ -1,9 +1,10 @@
 import random
+from FirstOrchard.Player import Player
 
 
 class Game:
 
-    def __init__(self):
+    def __init__(self, player):
         self.green_apples = 4
         self.red_apples = 4
         self.blue_plums = 4
@@ -12,10 +13,18 @@ class Game:
         self._log = ''
         self._normalized_log_buffer = []
         self._normalized_log = ''
-
+        self.player = player
+        self.player.game = self
 
     def new_game(self):
-        self.__init__()
+        self.green_apples = 4
+        self.red_apples = 4
+        self.blue_plums = 4
+        self.yellow_pears = 4
+        self.crow_position = 6
+        self._log = ''
+        self._normalized_log_buffer = []
+        self._normalized_log = ''
 
     def is_game_won(self):
         if self.green_apples == 0 and self.red_apples == 0 and \
@@ -55,21 +64,6 @@ class Game:
         self.crow_position -= 1
         # self.log('!')
 
-    def move_strategically(self):
-        choices = []
-        if self.green_apples > 0:
-            choices.append(self.move_green)
-        if self.red_apples > 0:
-            choices.append(self.move_red)
-        if self.blue_plums > 0:
-            choices.append(self.move_blue)
-        if self.yellow_pears > 0:
-            choices.append(self.move_yellow)
-
-        random_index = random.randint(0, len(choices) - 1)
-        f = choices[random_index]
-        f(True)
-
     def log(self, s, is_strategic=False):
         if not is_strategic:
             self._log += s
@@ -106,7 +100,7 @@ class Game:
             elif roll == 4:
                 self.move_yellow()
             else:
-                self.move_strategically()
+                self.player.move()
 
             turn_count += 1
 
