@@ -1,6 +1,3 @@
-import random
-
-
 class PlayerPicksFavorite:
 
     def move(self):
