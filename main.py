@@ -4,6 +4,7 @@ from FirstOrchard.Game import Game
 from FirstOrchard.PlayerPicksWorst import PlayerPicksWorst
 from FirstOrchard.PlayerPicksBestWithBias import PlayerPicksBestWithBias
 from FirstOrchard.PlayerPicksBestWithoutBias import PlayerPicksBestWithoutBias
+from FirstOrchard.PlayerPicksFavourite import PlayerPicksFavorite
 
 
 def gen_dice_sequence():
@@ -18,7 +19,7 @@ if __name__ == '__main__':
     total_simulations = 100000
     win_count = 0
     # game = Game(PlayerPicksWorst())
-    game = Game(PlayerPicksBestWithoutBias())
+    game = Game(PlayerPicksFavorite())
 
     for _ in range(total_simulations):
         dice_rolls = gen_dice_sequence()
