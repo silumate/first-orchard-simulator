@@ -1,4 +1,7 @@
-class PlayerPicksFavorite:
+from FirstOrchard.Player import Player
+
+
+class PlayerPicksFavorite(Player):
 
     def move(self):
         """
