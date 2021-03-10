@@ -1,6 +1,8 @@
 import random
+import csv
 
 from FirstOrchard.Game import Game
+from FirstOrchard.Player import Player
 from FirstOrchard.PlayerPicksWorst import PlayerPicksWorst
 from FirstOrchard.PlayerPicksBestWithBias import PlayerPicksBestWithBias
 from FirstOrchard.PlayerPicksBestWithoutBias import PlayerPicksBestWithoutBias
@@ -15,7 +17,7 @@ def gen_dice_sequence():
     return ret
 
 
-if __name__ == '__main__':
+def run_simulations_with_one_strategy():
     total_simulations = 100000
     win_count = 0
     # game = Game(PlayerPicksWorst())
@@ -30,15 +32,62 @@ if __name__ == '__main__':
     win_percentage = (win_count / total_simulations) * 100
     print(win_percentage)
 
-    # print(f'{total_simulations} sims | {win_count/total_simulations*100}% wins | {average_sum/total_simulations} moves')
+
+def run_simulations_with_all_strategies():
+    """
+    Run a simulations for each of the different player strategies, while giving them the same dice rolls
+    in order to fairly compare one strategy to another.
+
+    Results are saved in a CSV file for analysis.
+    :return:
+        None
+    """
+    sims = [
+        Game(PlayerPicksWorst()),
+        Game(PlayerPicksFavorite()),
+        Game(Player()),
+        Game(PlayerPicksBestWithBias()),
+        Game(PlayerPicksBestWithoutBias()),
+    ]
+    sim_cnt = len(sims)
+
+    win_count = [0] * len(sims)
+    total_simulations = 100000
+
+    with open('sims.csv', 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        for _ in range(total_simulations):
+            dice_rolls = gen_dice_sequence()
+
+            row = [None] * 2 * sim_cnt
+            col = 0
+
+            for i, sim in enumerate(sims):
+                win, moves, log, nlog = sim.simulate_game(dice_sequence=dice_rolls)
+                row[col] = win
+                col += 1
+                row[col] = nlog
+                col += 1
+                if win:
+                    win_count[i] += 1
+
+            csvwriter.writerow(row)
+
+    win_percentage = [(x / total_simulations) for x in win_count]
+    print(win_percentage)
+
+
+if __name__ == '__main__':
+    # run_simulations_with_one_strategy()
+    run_simulations_with_all_strategies()
 
 '''
-Results:
-optimal_pick  10000 sims | 77.10000000000001% wins | 22.2137 moves
-bias_pick     10000 sims | 76.78% wins | 22.3187 moves
-random_pick   10000 sims | 73.97% wins | 23.1517 moves
-worst_pick    10000 sims | 70.46% wins | 24.202 moves
-
-https://colab.research.google.com/ for data analysis.
-
+Example Result from a run_simulations_with_all_strategies() with 100,000 simulations
+%           Player Strategy
+0.70061     Make the worst possible move
+0.72592     Pick your favourite color first
+0.73742     Randomly pick a legal move
+0.76845     Pick the color with the most left (and biased to your favorite if there is a tie)
+0.76821     pick the color with the most left (and randomly choose one if there is a tie)
 '''
