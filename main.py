@@ -20,8 +20,8 @@ def gen_dice_sequence():
 def run_simulations_with_one_strategy():
     total_simulations = 100000
     win_count = 0
-    # game = Game(PlayerPicksWorst())
-    game = Game(PlayerPicksFavorite())
+    # game = Game([PlayerPicksWorst()])
+    game = Game([PlayerPicksFavorite()])
 
     for _ in range(total_simulations):
         dice_rolls = gen_dice_sequence()
@@ -35,19 +35,18 @@ def run_simulations_with_one_strategy():
 
 def run_simulations_with_all_strategies():
     """
-    Run a simulations for each of the different player strategies, while giving them the same dice rolls
-    in order to fairly compare one strategy to another.
-
+    Generate a sequence of dice rolls and use it to simulate single player games with each player strategy.
+    Repeat thousands of times to compare how each strategy fares relative to each other.
     Results are saved in a CSV file for analysis.
     :return:
         None
     """
     sims = [
-        Game(PlayerPicksWorst()),
-        Game(PlayerPicksFavorite()),
-        Game(Player()),
-        Game(PlayerPicksBestWithBias()),
-        Game(PlayerPicksBestWithoutBias()),
+        Game([PlayerPicksWorst()]),
+        Game([PlayerPicksFavorite()]),
+        Game([Player()]),
+        Game([PlayerPicksBestWithBias()]),
+        Game([PlayerPicksBestWithoutBias()]),
     ]
     sim_cnt = len(sims)
 
@@ -78,10 +77,32 @@ def run_simulations_with_all_strategies():
     print(win_percentage)
 
 
+def run_simulation_of_my_family():
+    """
+    My daughter plays like PlayerPicksFavorite(), my wife and I play like PlayerPicksBestWithoutBias().
+    Simulations show that we will win about 75% of the time.
+
+    :return: None
+    """
+    total_simulations = 100000
+    win_count = 0
+    game = Game([PlayerPicksFavorite(), PlayerPicksBestWithoutBias(), PlayerPicksBestWithoutBias()])
+
+    for _ in range(total_simulations):
+        dice_rolls = gen_dice_sequence()
+        win, moves, log, nlog = game.simulate_game(dice_sequence=dice_rolls)
+        if win:
+            win_count += 1
+
+    win_percentage = (win_count / total_simulations) * 100
+    print(win_percentage)
+
+
+
 if __name__ == '__main__':
     # run_simulations_with_one_strategy()
-    run_simulations_with_all_strategies()
-
+    # run_simulations_with_all_strategies()
+    run_simulation_of_my_family()
 '''
 Example Result from a run_simulations_with_all_strategies() with 100,000 simulations
 %           Player Strategy
