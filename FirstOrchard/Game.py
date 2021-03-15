@@ -4,7 +4,7 @@ from FirstOrchard.Player import Player
 
 class Game:
 
-    def __init__(self, player):
+    def __init__(self, players):
         self.green_apples = 4
         self.red_apples = 4
         self.blue_plums = 4
@@ -13,8 +13,10 @@ class Game:
         self._log = ''
         self._normalized_log_buffer = []
         self._normalized_log = ''
-        self.player = player
-        self.player.game = self
+        self.player_index = 0
+        self.players = players
+        for player in self.players:
+            player.game = self
 
     def new_game(self):
         self.green_apples = 4
@@ -25,6 +27,7 @@ class Game:
         self._log = ''
         self._normalized_log_buffer = []
         self._normalized_log = ''
+        self.player_index = 0
 
     def is_game_won(self):
         if self.green_apples == 0 and self.red_apples == 0 and \
@@ -100,7 +103,11 @@ class Game:
             elif roll == 4:
                 self.move_yellow()
             else:
-                self.player.move()
+                self.players[self.player_index].move()
+
+            self.player_index += 1
+            if self.player_index >= len(self.players):
+                self.player_index = 0
 
             turn_count += 1
 
